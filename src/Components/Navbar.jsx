@@ -40,29 +40,11 @@ const AdminLayout = () => {
       path: '/admin/faqs' 
     },
     { 
-      id: 'branding', 
-      label: 'Branding Page', 
+      id: 'service', 
+      label: 'Services', 
       icon: Palette, 
-      path: '/admin/branding' 
-    },
-    { 
-      id: 'marketing', 
-      label: 'Marketing Page', 
-      icon: Megaphone, 
-      path: '/admin/marketing' 
-    },
-    { 
-      id: 'graphic-design', 
-      label: 'Graphic Design Page', 
-      icon: Image, 
-      path: '/admin/graphic-design' 
-    },
-    { 
-      id: 'software-development', 
-      label: 'Software Development Page', 
-      icon: Code, 
-      path: '/admin/software-development' 
-    },
+      path: '/admin/Services' 
+    }
   ];
 
   const toggleSidebar = () => {
