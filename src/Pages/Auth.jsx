@@ -17,7 +17,7 @@ const Auth = () => {
     // Simulate loading delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (email === 'novaframes@gmail.com' && password === 'novaframes@123') {
+    if (email === 'novaframes@gmail.com' && password === 'novaframes@gmail.com') {
       navigate('/admin/projects')
     } else {
       setError('Invalid email or password');
