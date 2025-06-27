@@ -4,8 +4,10 @@ import Auth from './Pages/Auth';
 import Projects from './Pages/Projects';
 import Navbar from './Components/Navbar';
 import Clients from './Pages/Clients';
-import Services from './Pages/Services';
+import BrandingAdmin from './Pages/BrandingAdmin';
 import Faqs from './Pages/Faqs';
+import PerformanceAdmin from './Pages/PerformanceAdmin';
+import GraphicAdmin from './Pages/GraphicAdmin';
 
 const App = () => {
   return (
@@ -19,7 +21,9 @@ const App = () => {
           <Route index element={<Projects />} />
           <Route path="projects" element={<Projects />} />
           <Route path="clients" element={<Clients />} />
-          <Route path="services" element={<Services />} />
+          <Route path="BrandingAdmin" element={<BrandingAdmin />} />
+          <Route path="PerformanceAdmin" element={<PerformanceAdmin />} />
+          <Route path="GraphicAdmin" element={<GraphicAdmin />} />
           <Route path="faqs" element={<Faqs />} />
         </Route>
       </Routes>

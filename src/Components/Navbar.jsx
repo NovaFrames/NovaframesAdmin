@@ -40,10 +40,22 @@ const AdminLayout = () => {
       path: '/admin/faqs' 
     },
     { 
-      id: 'service', 
-      label: 'Services', 
+      id: 'BrandingAdmin', 
+      label: 'BrandingAdmin', 
       icon: Palette, 
-      path: '/admin/Services' 
+      path: '/admin/BrandingAdmin' 
+    },
+    { 
+      id: 'PerformanceAdmin', 
+      label: 'PerformanceAdmin', 
+      icon: Palette, 
+      path: '/admin/PerformanceAdmin' 
+    },
+    { 
+      id: 'GraphicAdmin', 
+      label: 'GraphicAdmin', 
+      icon: Palette, 
+      path: '/admin/GraphicAdmin' 
     }
   ];
 
