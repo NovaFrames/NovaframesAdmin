@@ -25,7 +25,8 @@ import {
   Filter,
   User,
   Grid3X3,
-  Table
+  Table,
+  Star
 } from 'lucide-react';
 import { db, storage } from '../utils/firebase';
 
@@ -41,12 +42,16 @@ const Clients = () => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
   const [formData, setFormData] = useState({
     name: '',
+    company: '',
     review: '',
+    stars: 5,
     image: ''
   });
   const [editFormData, setEditFormData] = useState({
     name: '',
+    company: '',
     review: '',
+    stars: 5,
     image: ''
   });
 
@@ -73,6 +78,7 @@ const Clients = () => {
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.review.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -119,14 +125,22 @@ const Clients = () => {
 
       await addDoc(collection(db, 'clients'), {
         name: formData.name,
+        company: formData.company,
         review: formData.review,
+        stars: Number(formData.stars),
         image: imageUrl
       });
 
       alert('Client added successfully');
       fetchClients();
       setIsModalOpen(false);
-      setFormData({ name: '', review: '', image: '' });
+      setFormData({
+        name: '',
+        company: '',
+        review: '',
+        stars: 5,
+        image: ''
+      });
       setImageFile(null);
     } catch (error) {
       console.error('Error adding client: ', error);
@@ -140,7 +154,9 @@ const Clients = () => {
     setCurrentClient(client);
     setEditFormData({
       name: client.name,
+      company: client.company || '',
       review: client.review,
+      stars: client.stars || 5,
       image: client.image
     });
     setIsEditModalOpen(true);
@@ -158,7 +174,9 @@ const Clients = () => {
 
       await updateDoc(doc(db, 'clients', currentClient.id), {
         name: editFormData.name,
+        company: editFormData.company,
         review: editFormData.review,
+        stars: Number(editFormData.stars),
         image: imageUrl
       });
 
@@ -189,6 +207,19 @@ const Clients = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const renderStars = (rating) => {
+    return (
+      <div className="flex items-center">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`w-4 h-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -291,18 +322,20 @@ const Clients = () => {
                         )}
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">{client.name}</h3>
+                      {client.company && (
+                        <p className="text-sm text-gray-500 mb-2 flex items-center gap-1">
+                          <Building2 className="w-4 h-4" />
+                          {client.company}
+                        </p>
+                      )}
+                      <div className="mb-2">
+                        {renderStars(client.stars || 5)}
+                      </div>
                       <p className="text-gray-600 text-sm mb-4 flex items-center gap-1">
                         "{client.review}"
                       </p>
 
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {/* <button
-                          onClick={() => alert(`Viewing ${client.name}`)}
-                          className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-colors"
-                          title="View"
-                        >
-                          <Eye size={16} />
-                        </button> */}
                         <button
                           onClick={() => handleEdit(client)}
                           className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-xl transition-colors"
@@ -330,6 +363,12 @@ const Clients = () => {
                       <tr>
                         <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Client
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Company
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Rating
                         </th>
                         <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Review
@@ -367,7 +406,17 @@ const Clients = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center text-sm text-gray-900">
+                            <div className="text-sm text-gray-900">
+                              {client.company || '-'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {renderStars(client.stars || 5)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-900 line-clamp-2">
                               {client.review}
                             </div>
                           </td>
@@ -378,13 +427,6 @@ const Clients = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end gap-2">
-                              {/* <button
-                                onClick={() => alert(`Viewing ${client.name}`)}
-                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                title="View"
-                              >
-                                <Eye size={16} />
-                              </button> */}
                               <button
                                 onClick={() => handleEdit(client)}
                                 className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
@@ -413,88 +455,129 @@ const Clients = () => {
 
         {/* Add Client Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl transform transition-all">
+              {/* Header */}
               <div className="flex justify-between items-center border-b border-gray-200 p-6">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-100 rounded-xl">
                     <Plus className="text-blue-600" size={20} />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Add New Client</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">Add New Client</h2>
                 </div>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
                 >
-                  <X size={20} />
+                  <X size={22} />
                 </button>
               </div>
+
+              {/* Form */}
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Client Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Enter client name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Review
-                  </label>
-                  <input
-                    type="text"
-                    name="review"
-                    value={formData.review}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Enter review"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Client Image
-                  </label>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                      <Upload size={20} className="text-gray-400" />
-                      <span className="text-sm text-gray-600">Upload Image</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setImageFile(e.target.files[0])}
-                        className="hidden"
-                      />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Client Name
                     </label>
-                    {imageFile && (
-                      <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl">
-                        <Check className="text-green-500" size={16} />
-                        <span className="text-sm text-green-700 font-medium">
-                          {imageFile.name}
-                        </span>
-                      </div>
-                    )}
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      placeholder="Enter client name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Name
+                    </label>
+                    <input
+                      type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      placeholder="Enter company name"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Review
+                    </label>
+                    <textarea
+                      name="review"
+                      value={formData.review}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      placeholder="Enter review"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Rating (1-5 stars)
+                    </label>
+                    <select
+                      name="stars"
+                      value={formData.stars}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                    >
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <option key={num} value={num}>
+                          {num} {num === 1 ? "star" : "stars"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Client Image
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
+                        <Upload size={20} className="text-gray-400" />
+                        <span className="text-sm text-gray-600">Upload Image</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setImageFile(e.target.files[0])}
+                          className="hidden"
+                        />
+                      </label>
+                      {imageFile && (
+                        <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl">
+                          <Check className="text-green-500" size={16} />
+                          <span className="text-sm text-green-700 font-medium">
+                            {imageFile.name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
+
+                {/* Buttons */}
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition"
                   >
                     {loading && <Loader2 className="animate-spin" size={18} />}
                     Add Client
@@ -505,69 +588,99 @@ const Clients = () => {
           </div>
         )}
 
+
         {/* Edit Client Modal */}
         {isEditModalOpen && currentClient && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl transform transition-all">
+              {/* Header */}
               <div className="flex justify-between items-center border-b border-gray-200 p-6">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-green-100 rounded-xl">
                     <Edit className="text-green-600" size={20} />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Edit Client</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">Edit Client</h2>
                 </div>
                 <button
                   onClick={() => setIsEditModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition"
                 >
-                  <X size={20} />
+                  <X size={22} />
                 </button>
               </div>
+
+              {/* Form */}
               <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Client Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editFormData.name}
-                    onChange={handleEditInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Review
-                  </label>
-                  <input
-                    type="text"
-                    name="review"
-                    value={editFormData.review}
-                    onChange={handleEditInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Client Image
-                  </label>
-                  <div className="flex items-center gap-4 mb-4">
-                    {editFormData.image ? (
-                      <img
-                        src={editFormData.image}
-                        alt="Current"
-                        className="h-16 w-16 rounded-full object-cover ring-2 ring-white shadow-lg"
-                      />
-                    ) : (
-                      <div className="h-16 w-16 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center ring-2 ring-white shadow-lg">
-                        <User className="text-gray-400" size={24} />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Client Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editFormData.name}
+                      onChange={handleEditInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                      placeholder="Enter client name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                    <input
+                      type="text"
+                      name="company"
+                      value={editFormData.company}
+                      onChange={handleEditInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                      placeholder="Enter company name"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Review</label>
+                    <textarea
+                      name="review"
+                      value={editFormData.review}
+                      onChange={handleEditInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                      placeholder="Enter review"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Rating (1–5 stars)</label>
+                    <select
+                      name="stars"
+                      value={editFormData.stars}
+                      onChange={handleEditInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                    >
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <option key={num} value={num}>
+                          {num} {num === 1 ? "star" : "stars"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Client Image</label>
+                    <div className="flex items-center gap-4 mb-3">
+                      {editFormData.image ? (
+                        <img
+                          src={editFormData.image}
+                          alt="Current"
+                          className="h-16 w-16 rounded-full object-cover ring-2 ring-white shadow-md"
+                        />
+                      ) : (
+                        <div className="h-16 w-16 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center ring-2 ring-white shadow-md">
+                          <User className="text-gray-400" size={24} />
+                        </div>
+                      )}
+                      <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50 transition">
                         <Upload size={20} className="text-gray-400" />
                         <span className="text-sm text-gray-600">Change Image</span>
                         <input
@@ -578,28 +691,28 @@ const Clients = () => {
                         />
                       </label>
                     </div>
+                    {editImageFile && (
+                      <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl">
+                        <Check className="text-green-500" size={16} />
+                        <span className="text-sm text-green-700 font-medium">{editImageFile.name}</span>
+                      </div>
+                    )}
                   </div>
-                  {editImageFile && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl">
-                      <Check className="text-green-500" size={16} />
-                      <span className="text-sm text-green-700 font-medium">
-                        {editImageFile.name}
-                      </span>
-                    </div>
-                  )}
                 </div>
+
+                {/* Buttons */}
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
-                    className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                    className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition"
                   >
                     {loading && <Loader2 className="animate-spin" size={18} />}
                     Update Client
@@ -609,6 +722,7 @@ const Clients = () => {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

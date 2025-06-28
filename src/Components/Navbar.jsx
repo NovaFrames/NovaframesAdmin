@@ -12,7 +12,8 @@ import {
   ChevronRight,
   LogOut,
   User,
-  Home
+  Home,
+  Contact
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -58,10 +59,10 @@ const AdminLayout = () => {
       path: '/admin/GraphicAdmin' 
     },
     { 
-      id: 'packagesAdmin', 
-      label: 'packagesAdmin', 
-      icon: Palette, 
-      path: '/admin/packagesAdmin' 
+      id: 'ContactDetails', 
+      label: 'Contact Details', 
+      icon: Contact, 
+      path: '/admin/contact-details' 
     }
   ];
 
