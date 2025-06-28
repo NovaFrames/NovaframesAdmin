@@ -18,7 +18,9 @@ import {
   Search,
   Filter,
   ImageIcon,
-  Table
+  Table,
+  Quote,
+  Link
 } from 'lucide-react';
 import { fetchServices } from '../utils/service';
 
@@ -34,6 +36,8 @@ const Projects = () => {
     images: [],
     description: '',
     year: '',
+    link: '',
+    review: '',
     serviceId: '', // Add this line
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -175,6 +179,8 @@ const Projects = () => {
         images: [],
         description: '',
         year: '',
+        link: '',
+        review: '',
         serviceId: '',
       });
       setIsEditing(false);
@@ -199,6 +205,8 @@ const Projects = () => {
       images: project.images || [],
       description: project.description,
       year: project.year,
+      link: project.link,
+      review: project.review,
       serviceId: project.serviceId || '',// Add this line
     });
     setCurrentProjectId(project.id);
@@ -552,15 +560,14 @@ const Projects = () => {
                         disabled={isUploading}
                       >
                         <option value="">Select a category</option>
-                        {services.map((service) => (
-                          <option key={service.id} value={service.name}>
-                            {service.name}
-                          </option>
-                        ))}
+                        <option value="Digital Marketing">Digital Marketing</option>
+                        <option value="Branding">Branding</option>
+                        <option value="Graphic Design">Graphic Design</option>
+                        <option value="Software Developement">Software Developement</option>
                       </select>
                     </div>
 
-                    {project.category === 'Software Development' && (
+                    {project.category === 'Software Developement' && (
                       <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                           <Tag className="w-4 h-4" />
@@ -576,10 +583,44 @@ const Projects = () => {
                           <option value="">Select an option</option>
                           <option value="mobile">Mobile</option>
                           <option value="website">Website</option>
-                          <option value="E-commerce">E-commerce</option>
+                          <option value="ecommerce">E-commerce</option>
                         </select>
                       </div>
                     )}
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                        <Link className="w-4 h-4" />
+                        Link
+                      </label>
+                      <input
+                        type="text"
+                        name="link"
+                        value={project.link}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        placeholder="Enter project link"
+                        required
+                        disabled={isUploading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                        <Quote className="w-4 h-4" />
+                        Review
+                      </label>
+                      <input
+                        type="text"
+                        name="review"
+                        value={project.review}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        placeholder="Enter project review"
+                        required
+                        disabled={isUploading}
+                      />
+                    </div>
 
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-medium text-gray-700">

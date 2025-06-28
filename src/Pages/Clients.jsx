@@ -41,12 +41,12 @@ const Clients = () => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
   const [formData, setFormData] = useState({
     name: '',
-    company: '',
+    review: '',
     image: ''
   });
   const [editFormData, setEditFormData] = useState({
     name: '',
-    company: '',
+    review: '',
     image: ''
   });
 
@@ -73,7 +73,7 @@ const Clients = () => {
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.company.toLowerCase().includes(searchTerm.toLowerCase())
+    client.review.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleInputChange = (e) => {
@@ -119,14 +119,14 @@ const Clients = () => {
 
       await addDoc(collection(db, 'clients'), {
         name: formData.name,
-        company: formData.company,
+        review: formData.review,
         image: imageUrl
       });
 
       alert('Client added successfully');
       fetchClients();
       setIsModalOpen(false);
-      setFormData({ name: '', company: '', image: '' });
+      setFormData({ name: '', review: '', image: '' });
       setImageFile(null);
     } catch (error) {
       console.error('Error adding client: ', error);
@@ -140,7 +140,7 @@ const Clients = () => {
     setCurrentClient(client);
     setEditFormData({
       name: client.name,
-      company: client.company,
+      review: client.review,
       image: client.image
     });
     setIsEditModalOpen(true);
@@ -158,7 +158,7 @@ const Clients = () => {
 
       await updateDoc(doc(db, 'clients', currentClient.id), {
         name: editFormData.name,
-        company: editFormData.company,
+        review: editFormData.review,
         image: imageUrl
       });
 
@@ -292,8 +292,7 @@ const Clients = () => {
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">{client.name}</h3>
                       <p className="text-gray-600 text-sm mb-4 flex items-center gap-1">
-                        <Building2 size={14} />
-                        {client.company}
+                        "{client.review}"
                       </p>
 
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -333,7 +332,7 @@ const Clients = () => {
                           Client
                         </th>
                         <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Company
+                          Review
                         </th>
                         <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
@@ -369,8 +368,7 @@ const Clients = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center text-sm text-gray-900">
-                              <Building2 size={16} className="text-gray-400 mr-2" />
-                              {client.company}
+                              {client.review}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -448,16 +446,16 @@ const Clients = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Name
+                    Review
                   </label>
                   <input
                     type="text"
-                    name="company"
-                    value={formData.company}
+                    name="review"
+                    value={formData.review}
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Enter company name"
+                    placeholder="Enter review"
                   />
                 </div>
                 <div>
@@ -541,12 +539,12 @@ const Clients = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Name
+                    Review
                   </label>
                   <input
                     type="text"
-                    name="company"
-                    value={editFormData.company}
+                    name="review"
+                    value={editFormData.review}
                     onChange={handleEditInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"

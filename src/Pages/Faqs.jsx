@@ -361,7 +361,7 @@ const Faqs = () => {
 
         {/* View Answer Modal */}
         {viewAnswerId && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
             <div className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl">
               {(() => {
                 const faq = faqs.find(f => f.id === viewAnswerId);
