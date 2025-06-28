@@ -56,6 +56,12 @@ const AdminLayout = () => {
       label: 'GraphicAdmin', 
       icon: Palette, 
       path: '/admin/GraphicAdmin' 
+    },
+    { 
+      id: 'packagesAdmin', 
+      label: 'packagesAdmin', 
+      icon: Palette, 
+      path: '/admin/packagesAdmin' 
     }
   ];
 
