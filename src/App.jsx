@@ -9,6 +9,7 @@ import Faqs from './Pages/Faqs';
 import PerformanceAdmin from './Pages/PerformanceAdmin';
 import GraphicAdmin from './Pages/GraphicAdmin';
 import ContactDetails from './Pages/ContactDetails';
+import Image from './Pages/Image';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="PerformanceAdmin" element={<PerformanceAdmin />} />
           <Route path="GraphicAdmin" element={<GraphicAdmin />} />
           <Route path="contact-details" element={<ContactDetails />} />
+          <Route path="image" element={<Image />} />
           <Route path="faqs" element={<Faqs />} />
         </Route>
       </Routes>

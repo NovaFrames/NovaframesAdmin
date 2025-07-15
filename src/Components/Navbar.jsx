@@ -63,6 +63,12 @@ const AdminLayout = () => {
       label: 'Contact Details', 
       icon: Contact, 
       path: '/admin/contact-details' 
+    },
+    { 
+      id: 'Image', 
+      label: 'Image ', 
+      icon: Image, 
+      path: '/admin/image' 
     }
   ];
 
