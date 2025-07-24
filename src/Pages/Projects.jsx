@@ -34,7 +34,8 @@ const Projects = () => {
     title: '',
     category: '',
     images: [],
-    description: '',
+    descriptionOne: '',
+    descriptionTwo: '',
     year: '',
     link: '',
     review: '',
@@ -76,7 +77,7 @@ const Projects = () => {
   // Filter projects based on search and category
   const filteredProjects = projects.filter(proj => {
     const matchesSearch = proj.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      proj.description.toLowerCase().includes(searchTerm.toLowerCase());
+      proj.descriptionOne.toLowerCase().includes(searchTerm.toLowerCase()) || proj.descriptionTwo.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !selectedCategory || proj.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -177,7 +178,8 @@ const Projects = () => {
         title: '',
         category: '',
         images: [],
-        description: '',
+        descriptionOne: '',
+        descriptionTwo: '',
         year: '',
         link: '',
         review: '',
@@ -203,7 +205,8 @@ const Projects = () => {
       title: project.title,
       category: project.category,
       images: project.images || [],
-      description: project.description,
+      descriptionOne: project.descriptionOne,
+      descriptionTwo: project.descriptionTwo,
       year: project.year,
       link: project.link,
       review: project.review,
@@ -267,7 +270,11 @@ const Projects = () => {
         </div>
 
         <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-          {project.description}
+          {project.descriptionOne}
+        </p>
+        
+        <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+          {project.descriptionTwo}
         </p>
 
         <div className="flex items-center justify-between">
@@ -316,7 +323,8 @@ const Projects = () => {
                   title: '',
                   category: '',
                   images: [],
-                  description: '',
+                  descriptionOne: '',
+                  descriptionTwo: '',
                   year: '',
                 });
                 setIsModalOpen(true);
@@ -434,7 +442,8 @@ const Projects = () => {
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{proj.title}</div>
-                            <div className="text-sm text-gray-500 truncate max-w-xs">{proj.description}</div>
+                            <div className="text-sm text-gray-500 truncate max-w-xs">{proj.descriptionOne}</div>
+                            <div className="text-sm text-gray-500 truncate max-w-xs">{proj.descriptionTwo}</div>
                           </div>
                         </div>
                       </td>
@@ -643,11 +652,25 @@ const Projects = () => {
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                       <FileText className="w-4 h-4" />
-                      Description *
+                      Descriptions *
                     </label>
                     <textarea
-                      name="description"
-                      value={project.description}
+                      name="descriptionOne"
+                      value={project.descriptionOne}
+                      onChange={handleChange}
+                      rows="4"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                      placeholder="Describe your project, technologies used, challenges overcome..."
+                      required
+                      disabled={isUploading}
+                    />
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <FileText className="w-4 h-4" />
+                      DescriptionTwo *
+                    </label>
+                    <textarea
+                      name="descriptionTwo"
+                      value={project.descriptionTwo}
                       onChange={handleChange}
                       rows="4"
                       className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
@@ -802,8 +825,13 @@ const Projects = () => {
                 )}
 
                 <div className="prose max-w-none">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-                  <p className="text-gray-700 whitespace-pre-line">{viewingProject.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">DescriptionOne</h3>
+                  <p className="text-gray-700 whitespace-pre-line">{viewingProject.descriptionOne}</p>
+                </div>
+
+                <div className="prose max-w-none">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">DescriptionTwo</h3>
+                  <p className="text-gray-700 whitespace-pre-line">{viewingProject.descriptionTwo}</p>
                 </div>
 
                 <div className="flex justify-end pt-6 border-t border-gray-200">

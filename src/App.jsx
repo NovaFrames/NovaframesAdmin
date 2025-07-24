@@ -10,6 +10,7 @@ import PerformanceAdmin from './Pages/PerformanceAdmin';
 import GraphicAdmin from './Pages/GraphicAdmin';
 import ContactDetails from './Pages/ContactDetails';
 import Image from './Pages/Image';
+import PackagesAdmin from './Pages/PackagesAdmin';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="clients" element={<Clients />} />
           <Route path="BrandingAdmin" element={<BrandingAdmin />} />
           <Route path="PerformanceAdmin" element={<PerformanceAdmin />} />
+          <Route path="PackagesAdmin" element={<PackagesAdmin />} />
           <Route path="GraphicAdmin" element={<GraphicAdmin />} />
           <Route path="contact-details" element={<ContactDetails />} />
           <Route path="image" element={<Image />} />

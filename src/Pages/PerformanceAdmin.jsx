@@ -433,6 +433,7 @@ const PerformanceAdmin = () => {
                         <option value="TrendingUp">TrendingUp</option>
                         <option value="DollarSign">DollarSign</option>
                         <option value="BarChart3">BarChart3</option>
+                        <option value="UserCircle2Icon">UserCircle2Icon</option>
                       </select>
                     </div>
                     
