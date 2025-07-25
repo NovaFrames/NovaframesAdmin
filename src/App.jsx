@@ -11,6 +11,7 @@ import GraphicAdmin from './Pages/GraphicAdmin';
 import ContactDetails from './Pages/ContactDetails';
 import Image from './Pages/Image';
 import PackagesAdmin from './Pages/PackagesAdmin';
+import TopBrands from './Pages/TopBrands';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route index element={<Projects />} />
           <Route path="projects" element={<Projects />} />
           <Route path="clients" element={<Clients />} />
+          <Route path="top-brands" element={<TopBrands />} />
           <Route path="BrandingAdmin" element={<BrandingAdmin />} />
           <Route path="PerformanceAdmin" element={<PerformanceAdmin />} />
           <Route path="PackagesAdmin" element={<PackagesAdmin />} />

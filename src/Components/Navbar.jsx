@@ -15,7 +15,8 @@ import {
   Home,
   Contact,
   Crown,
-  IndianRupee
+  IndianRupee,
+  Target
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -26,6 +27,7 @@ const AdminLayout = () => {
   const menuItems = [
     { id: 'projects', label: 'Projects', icon: FolderOpen, path: '/admin/projects' },
     { id: 'clients', label: 'Clients', icon: Users, path: '/admin/clients' },
+    { id: 'topbrands', label: 'Top Brands', icon: Target, path: '/admin/top-brands' },
     { id: 'faqs', label: 'FAQs', icon: HelpCircle, path: '/admin/faqs' },
     { id: 'BrandingAdmin', label: 'BrandingAdmin', icon: Palette, path: '/admin/BrandingAdmin' },
     { id: 'PerformanceAdmin', label: 'PerformanceAdmin', icon: Crown, path: '/admin/PerformanceAdmin' },
